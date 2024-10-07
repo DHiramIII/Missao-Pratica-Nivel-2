@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários de Teste via REST</title>
+    <!-- Inclusão da folha de estilos do Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Inclusão da biblioteca Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Inclusão da biblioteca jQuery (necessária para AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body class="container bg-warning">
+
+    <!-- Título principal da página -->
+    <h1 class="text-center mt-4">Usuários de Teste via REST</h1>
+
+    <!-- Referência ao site reqres.in -->
+    <p class="text-center">Dados fornecidos por <a href="https://reqres.in" target="_blank">reqres.in</a></p>
+
+    <!-- Container principal dos usuários -->
+    <div id="usuarios" class="container-fluid">
+        <!-- Linha para os cards dos usuários -->
+        <div class="row">
+            <!-- Card de usuário com Vue.js e repetição v-for -->
+            <div class="col-md-4" v-for="(user, index) in users" :key="index">
+                <div class="card m-3 p-2">
+                    <!-- Imagem do usuário -->
+                    <img :src="user.avatar" class="card-img-top" :alt="`${user.first_name} ${user.last_name}`">
+                    <!-- Corpo do card -->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="card-text">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Definição do objeto Vue.js e métodos de manipulação -->
+    <script>
+        // Definindo o app Vue.js
+        const app = new Vue({
+            el: '#usuarios',
+            data() {
+                return {
+                    users: []  // Vetor de usuários inicialmente vazio
+                };
+            },
+            mounted() {
+                this.loadUsers();  // Chama a função para carregar os usuários ao montar o componente
+            },
+            methods: {
+                // Função para carregar os usuários usando Fetch API
+                loadUsers() {
+                    fetch('https://reqres.in/api/users?per_page=10')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.users = data.data;  // Preenche o vetor users com os dados da API
+                        })
+                        .catch(error => console.error('Erro ao carregar os usuários:', error));
+                }
+            }
+        });
+    </script>
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
